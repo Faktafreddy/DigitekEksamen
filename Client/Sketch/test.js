@@ -14,7 +14,15 @@ let side = 0;
 let imgX = 20/4;
 let imgY = 26/4;
 
+var timeLeft = 0;
+var countDownStatus = false;
 
+
+function countdown(input) {
+    console.log("countdown igang")
+    countDownStatus = true;
+    timeLeft = input;
+}
 
 
 
@@ -27,19 +35,60 @@ wn.connect(function(){
   },100);
 });*/
 
+class pointer{
+
+    constructor(x, y, diam, farve){
+    this.x = x;
+    this.y = y;
+    this.diam = diam;
+    this.col = farve;
+    }
+
+    display(){
+        fill(this.col);
+        stroke(15);
+        ellipse(this.x, this.y, this.diam, this.diam)
+    }
+}
+
+var mus = new pointer(canvasX/2, canvasY/2, 15, 255)
+
 function setup() {
     createCanvas(canvasX, canvasY);
     background(backgroundcolor);
 
-    cursor = loadImage('pointer.png');
+    //cursor = loadImage('pointer.png');
 
 }
+
+function op(){
+    mus.y += 50;
+}
+function ned(){
+    mus.y -= 50;
+}
+function hojre(){
+    mus.x += 50;
+}
+function venstre(){
+    mus.x -= 50;
+}
+
 
 function draw(){        //NOTER: Fix så Pil afstand ikke virker med pil længde, men til centrum
     //noStroke()
     //fill(0)
     background(backgroundcolor);
-    image(cursor, cursorX, cursorY);
+    //image(cursor, cursorX, cursorY);
+    mus.display();
+
+    if (timeLeft <= 0 && countDownStatus === true) {
+        countDownStatus = false;
+    } else if(countDownStatus === true) {
+        timeLeft -= 1/60;
+        console.log(timeLeft);
+    }
+
     if (keyCode === 49) {
         side = 1
     }
@@ -73,25 +122,51 @@ function draw(){        //NOTER: Fix så Pil afstand ikke virker med pil længde
     }*/
     }
 
-if (side === 1){
-    console.log("Side = 1")
-    move = 5;
-    if (keyIsDown(LEFT_ARROW)) {
-        cursorX -= move;
+    socket.on('message', (data) =>{
+
+//if (side === 1){
+    //console.log("Side = 1")
+    //move = 5;
+    if (data == 1 && countDownStatus === false) {
+        console.log("venstre");
+        venstre();
+        countdown(2);
       }
     
-      if (keyIsDown(RIGHT_ARROW)) {
-        cursorX += move;
+      if (data == 2 && countDownStatus === false) {
+        console.log("hojre");
+        hojre();
+        countdown(2);
+
       }
     
-      if (keyIsDown(UP_ARROW)) {
-        cursorY -= move;
+      if (data == 3 && countDownStatus === false) {
+        console.log("op");
+        op();
+        countdown(2);
+
       }
     
-      if (keyIsDown(DOWN_ARROW)) {
-        cursorY += move;
+      if (data == 4 && countDownStatus === false) {
+        console.log("ned");
+        ned();
+        countdown(2);
+
       }
-    }
+      if (data == 5 && countDownStatus === false) {
+        console.log("click");
+        countdown(2);
+
+        
+      }
+      if (data == 6 && countDownStatus === false) {
+          window.close()
+          countdown(2);
+
+      }
+    
+   
+});
 
     if (side === 2){
         console.log("KeyPressed")
@@ -99,22 +174,22 @@ if (side === 1){
         move = 0
         if (keyCode === LEFT_ARROW && keyIsPressed === true) {
             move = 100;
-            cursorX -= move;
+            mus.x -= move;
             move = 0;
             keyCode = 51
         } else if (keyCode === RIGHT_ARROW && keyIsPressed === true) {
             move = 100;
-            cursorX += move;
+            mus.x += move;
             move = 0;
             keyCode = 51;
         } else if (keyCode === UP_ARROW && keyIsPressed === true) {
             move = 100;
-            cursorY -= move;
+            mus.y -= move;
             move = 0;
             keyCode = 51
         } else if (keyCode === DOWN_ARROW && keyIsPressed === true) {
             move = 100;
-            cursorY += move;
+            mus.y += move;
             move = 0;
             keyCode = 51
         } else if (keyCode === SHIFT) {
