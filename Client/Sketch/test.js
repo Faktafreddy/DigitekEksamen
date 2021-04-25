@@ -1,7 +1,7 @@
 let socket = io.connect('http://localhost:8080');
 
-let canvasX = 800;
-let canvasY = 700;
+let canvasX = 1500;
+let canvasY = 900;
 let backgroundcolor = 153;
 let cursorX = 100;
 var cursorY = 150;
@@ -62,16 +62,16 @@ function setup() {
 }
 
 function op(){
-    mus.y += 50;
+    mus.y += 110;
 }
 function ned(){
-    mus.y -= 50;
+    mus.y -= 110;
 }
 function hojre(){
-    mus.x += 50;
+    mus.x += 110;
 }
 function venstre(){
-    mus.x -= 50;
+    mus.x -= 110;
 }
 
 
