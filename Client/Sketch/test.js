@@ -115,7 +115,7 @@ function draw(){
         countdown(2);
 
       }
-      if (data == 51 && countDownStatus === false){
+      if (data == 5 && countDownStatus === false){
         console.log("click");
         click();
         countdown(2);
