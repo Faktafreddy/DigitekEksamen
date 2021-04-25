@@ -23,24 +23,12 @@ var timeLeft = 0;
 var countDownStatus = false;
 
 var bane = true;
-var start = false;
 
 function countdown(input) {
     console.log("countdown igang")
     countDownStatus = true;
     timeLeft = input;
 }
-
-
-
-/*var Wekinator = require('wekinator');
-var wn = new Wekinator();
-wn.connect(function(){
-  wn.train();
-  setTimeout(function(){
-    wn.disconnect();
-  },100);
-});*/
 
 class pointer{
 
@@ -61,19 +49,15 @@ class pointer{
 var mus = new pointer(canvasX/2, canvasY/2, 15, 255)
 
 function setup() {
- //   cursor = loadImage('pointer.png');
     createCanvas(canvasX, canvasY);
     background(backgroundcolor);
-
-    //cursor = loadImage('pointer.png');
-
 }
 
 function op(){
-    mus.y += 110;
+    mus.y -= 110;
 }
 function ned(){
-    mus.y -= 110;
+    mus.y += 110;
 }
 function hojre(){
     mus.x += 110;
@@ -81,14 +65,20 @@ function hojre(){
 function venstre(){
     mus.x -= 110;
 }
+function click(){
+    if(rectX < mus.x + mus.diam &&
+        rectX + rectXL > mus.x &&
+        rectY < mus.y + mus.diam &&
+        rectY + rectYL > mus.y) {
+            bane = true;
+        }
+}
 
 
-function draw(){        //NOTER: Fix så Pil afstand ikke virker med pil længde, men til centrum
-    //noStroke()
-    //fill(0)
+function draw(){       
     background(backgroundcolor);
-    //image(cursor, cursorX, cursorY);
-    mus.display();
+    kasse(); //Kalder kasse function
+    mus.display(); //Viser cursoren
 
     if (timeLeft <= 0 && countDownStatus === true) {
         countDownStatus = false;
@@ -97,61 +87,8 @@ function draw(){        //NOTER: Fix så Pil afstand ikke virker med pil længde
         console.log(timeLeft);
     }
 
-    if (start === true){
-        kasse();
-    }
-
-
-    
-    if (keyCode === 51 && rectX < cursorX + imgX &&
-        rectX + rectXL > cursorX &&
-        rectY < cursorY + imgY &&
-        rectY + rectYL > cursorY) {
-            bane = true;
-         // collision detected!
-     }
-    
-
-    //rect(Math.floor((Math.random() * 10) + 1),Math.floor((Math.random() * 10) + 1),Math.floor((Math.random() * 10) + 1),Math.floor((Math.random() * 10) + 1));
-    if (keyCode === 49) {
-        side = 2
-    }
-    if (keyCode === 50) {
-        //side = 2
-        start = true;
-    }
-
-    if (side === 2){
-        
-    /*
-    rect(cursorX + imgX, cursorY - (move + 10), rectT, move); //Pil op
-    rect(cursorX + imgX, cursorY + 36, rectT, move); //Pil ned
-    rect(cursorX + (imgX * 4) + 10, cursorY + imgY, move, rectT); //Pil højre
-    rect(cursorX - move - 10, cursorY + imgY, move, rectT); //Pil venstre
-    */
-
-    /*if (keyIsPressed === true && keyCode === LEFT_ARROW) {
-        cursorX -= move;
-        //keyCode = 51;
-        
-    } else if (keyCode === RIGHT_ARROW) {
-        cursorX += move;
-    } else if (keyCode === UP_ARROW) {
-        cursorY -= move;
-    } else if (keyCode === DOWN_ARROW) {
-        cursorY += move;
-    } else if (keyCode === SHIFT) {
-        move += change;
-    } else if (keyCode === CONTROL) {
-        move -= change;
-    }*/
-    }
-
     socket.on('message', (data) =>{
 
-//if (side === 1){
-    //console.log("Side = 1")
-    //move = 5;
     if (data == 1 && countDownStatus === false) {
         console.log("venstre");
         venstre();
@@ -178,12 +115,12 @@ function draw(){        //NOTER: Fix så Pil afstand ikke virker med pil længde
         countdown(2);
 
       }
-      if (data == 5 && countDownStatus === false) {
+      if (data == 51 && countDownStatus === false){
         console.log("click");
+        click();
         countdown(2);
-
-        
       }
+
       if (data == 6 && countDownStatus === false) {
           window.close()
           countdown(2);
@@ -193,50 +130,17 @@ function draw(){        //NOTER: Fix så Pil afstand ikke virker med pil længde
    
 });
 
-    if (side === 2){
-        console.log("KeyPressed")
-    //function keyPressed() {
-        move = 0
-        if (keyCode === LEFT_ARROW && keyIsPressed === true) {
-            move = 100;
-            mus.x -= move;
-            move = 0;
-            keyCode = 52;
-        } else if (keyCode === RIGHT_ARROW && keyIsPressed === true) {
-            move = 100;
-            mus.x += move;
-            move = 0;
-            keyCode = 52;
-        } else if (keyCode === UP_ARROW && keyIsPressed === true) {
-            move = 100;
-            mus.y -= move;
-            move = 0;
-            keyCode = 52;
-        } else if (keyCode === DOWN_ARROW && keyIsPressed === true) {
-            move = 100;
-            mus.y += move;
-            move = 0;
-            keyCode = 52;
-        } else if (keyCode === SHIFT) {
-            move += change;
-        } else if (keyCode === CONTROL) {
-            move -= change;
-        }
-    
-        }
-      //}
-
 } //draw slut
 
-function kasse(){
-    if (bane === true){
-    rectX = 120;
-    rectY = 120;
-    rectXL = Math.round(random(10, canvasX - 130));
-    rectYL = Math.round(random(10, canvasY - 130));
-    bane = false;
+function kasse(){       //Skaber en kasse(rect), og laver en ny når der bliver trykket på den originale.
+    if (bane === true){ //Dette if statement gør at vores rect får sin størrelse og placering.
+    rectX = Math.round(random(10, canvasX - 130));
+    rectY = Math.round(random(10, canvasY - 130));
+    rectXL = 120;
+    rectYL = 120;
+    bane = false;       //Dette if statement kører kun en gang fordi den kræver bane === true, men bane bliver til false når den kører, så vi kun har en rect med den rigtige hitbox.
     }
 
-    rect(rectX, rectY, rectXL, rectYL);
+    rect(rectX, rectY, rectXL, rectYL);     //Her skaber vi vores kasse med den data vi får fra vores if statement.
 
 }
