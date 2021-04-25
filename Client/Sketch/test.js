@@ -1,5 +1,3 @@
-let socket = io.connect('http://localhost:8080');
-
 let canvasX = 800;
 let canvasY = 700;
 let backgroundcolor = 153;
@@ -11,40 +9,52 @@ let change = 25;
 let rectT = 10;
 let side = 0;
 
-let imgX = 20/4;
-let imgY = 26/4;
+let imgX = 20;
+let imgY = 26;
 
+var bane = true;
+var start = false;
 
+var rectX = 0;
+var rectY = 0;
+var rectXL = 0;
+var rectYL = 0;
 
-
-
-/*var Wekinator = require('wekinator');
-var wn = new Wekinator();
-wn.connect(function(){
-  wn.train();
-  setTimeout(function(){
-    wn.disconnect();
-  },100);
-});*/
 
 function setup() {
+ //   cursor = loadImage('pointer.png');
     createCanvas(canvasX, canvasY);
     background(backgroundcolor);
-
-    cursor = loadImage('pointer.png');
-
+    //image(cursor, cursorX, cursorY);
 }
 
 function draw(){        //NOTER: Fix så Pil afstand ikke virker med pil længde, men til centrum
     //noStroke()
     //fill(0)
     background(backgroundcolor);
-    image(cursor, cursorX, cursorY);
+    //image(cursor, cursorX, cursorY);
+    if (start === true){
+        kasse();
+    }
+
+
+    
+    if (keyCode === 51 && rectX < cursorX + imgX &&
+        rectX + rectXL > cursorX &&
+        rectY < cursorY + imgY &&
+        rectY + rectYL > cursorY) {
+            bane = true;
+         // collision detected!
+     }
+    
+
+    //rect(Math.floor((Math.random() * 10) + 1),Math.floor((Math.random() * 10) + 1),Math.floor((Math.random() * 10) + 1),Math.floor((Math.random() * 10) + 1));
     if (keyCode === 49) {
-        side = 1
+        side = 2
     }
     if (keyCode === 50) {
-        side = 2
+        //side = 2
+        start = true;
     }
 
     if (side === 2){
@@ -98,25 +108,25 @@ if (side === 1){
     //function keyPressed() {
         move = 0
         if (keyCode === LEFT_ARROW && keyIsPressed === true) {
-            move = 100;
+            move = 50;
             cursorX -= move;
             move = 0;
-            keyCode = 51
+            keyCode = 52;
         } else if (keyCode === RIGHT_ARROW && keyIsPressed === true) {
-            move = 100;
+            move = 50;
             cursorX += move;
             move = 0;
-            keyCode = 51;
+            keyCode = 52;
         } else if (keyCode === UP_ARROW && keyIsPressed === true) {
-            move = 100;
+            move = 50;
             cursorY -= move;
             move = 0;
-            keyCode = 51
+            keyCode = 52;
         } else if (keyCode === DOWN_ARROW && keyIsPressed === true) {
-            move = 100;
+            move = 50;
             cursorY += move;
             move = 0;
-            keyCode = 51
+            keyCode = 52;
         } else if (keyCode === SHIFT) {
             move += change;
         } else if (keyCode === CONTROL) {
@@ -128,4 +138,15 @@ if (side === 1){
 
 } //draw slut
 
+function kasse(){
+    if (bane === true){
+    rectX = 120;
+    rectY = 120;
+    rectXL = Math.round(random(10, canvasX - 130));
+    rectYL = Math.round(random(10, canvasY - 130));
+    bane = false;
+    }
 
+    rect(rectX, rectY, rectXL, rectYL);
+
+}
