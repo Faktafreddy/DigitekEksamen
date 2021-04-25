@@ -1,5 +1,3 @@
-let socket = io.connect('http://localhost:8080');
-
 let canvasX = 800;
 let canvasY = 700;
 let backgroundcolor = 153;
@@ -14,9 +12,16 @@ let side = 0;
 let imgX = 20/4;
 let imgY = 26/4;
 
+var rectX = 0;
+var rectY = 0;
+var rectXL = 0;
+var rectYL = 0;
+
 var timeLeft = 0;
 var countDownStatus = false;
 
+var bane = true;
+var start = false;
 
 function countdown(input) {
     console.log("countdown igang")
@@ -54,6 +59,7 @@ class pointer{
 var mus = new pointer(canvasX/2, canvasY/2, 15, 255)
 
 function setup() {
+ //   cursor = loadImage('pointer.png');
     createCanvas(canvasX, canvasY);
     background(backgroundcolor);
 
@@ -89,11 +95,28 @@ function draw(){        //NOTER: Fix så Pil afstand ikke virker med pil længde
         console.log(timeLeft);
     }
 
+    if (start === true){
+        kasse();
+    }
+
+
+    
+    if (keyCode === 51 && rectX < cursorX + imgX &&
+        rectX + rectXL > cursorX &&
+        rectY < cursorY + imgY &&
+        rectY + rectYL > cursorY) {
+            bane = true;
+         // collision detected!
+     }
+    
+
+    //rect(Math.floor((Math.random() * 10) + 1),Math.floor((Math.random() * 10) + 1),Math.floor((Math.random() * 10) + 1),Math.floor((Math.random() * 10) + 1));
     if (keyCode === 49) {
-        side = 1
+        side = 2
     }
     if (keyCode === 50) {
-        side = 2
+        //side = 2
+        start = true;
     }
 
     if (side === 2){
@@ -176,22 +199,22 @@ function draw(){        //NOTER: Fix så Pil afstand ikke virker med pil længde
             move = 100;
             mus.x -= move;
             move = 0;
-            keyCode = 51
+            keyCode = 52;
         } else if (keyCode === RIGHT_ARROW && keyIsPressed === true) {
             move = 100;
             mus.x += move;
             move = 0;
-            keyCode = 51;
+            keyCode = 52;
         } else if (keyCode === UP_ARROW && keyIsPressed === true) {
             move = 100;
             mus.y -= move;
             move = 0;
-            keyCode = 51
+            keyCode = 52;
         } else if (keyCode === DOWN_ARROW && keyIsPressed === true) {
             move = 100;
             mus.y += move;
             move = 0;
-            keyCode = 51
+            keyCode = 52;
         } else if (keyCode === SHIFT) {
             move += change;
         } else if (keyCode === CONTROL) {
@@ -203,4 +226,15 @@ function draw(){        //NOTER: Fix så Pil afstand ikke virker med pil længde
 
 } //draw slut
 
+function kasse(){
+    if (bane === true){
+    rectX = 120;
+    rectY = 120;
+    rectXL = Math.round(random(10, canvasX - 130));
+    rectYL = Math.round(random(10, canvasY - 130));
+    bane = false;
+    }
 
+    rect(rectX, rectY, rectXL, rectYL);
+
+}
