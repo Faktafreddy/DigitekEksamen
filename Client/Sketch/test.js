@@ -51,6 +51,7 @@ var mus = new pointer(canvasX/2, canvasY/2, 15, 255)
 function setup() {
     createCanvas(canvasX, canvasY);
     background(backgroundcolor);
+    frameRate(60);
 }
 
 function op(){
